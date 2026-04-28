@@ -1,6 +1,8 @@
 import React from 'react';
 import { fetchDashboardMetrics } from '@/actions/crm-actions';
 
+export const dynamic = 'force-dynamic';
+
 export default async function EngineDashboard() {
   const metrics = await fetchDashboardMetrics();
 

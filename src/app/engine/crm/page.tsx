@@ -1,6 +1,8 @@
 import React from 'react';
 import { supabase } from '@/lib/supabase/client';
 
+export const dynamic = 'force-dynamic';
+
 export default async function CRMPage() {
   let leads = [];
   let clients = [];
