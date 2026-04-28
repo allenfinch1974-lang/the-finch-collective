@@ -78,8 +78,9 @@ export default async function CRMPage() {
             <thead>
               <tr style={{ borderBottom: '2px solid var(--color-oatmeal)', color: 'var(--color-sage-light)' }}>
                 <th style={{ padding: '1rem' }}>Client Name</th>
-                <th style={{ padding: '1rem' }}>Email</th>
-                <th style={{ padding: '1rem' }}>Phone</th>
+                <th style={{ padding: '1rem' }}>Email / Phone</th>
+                <th style={{ padding: '1rem' }}>Location</th>
+                <th style={{ padding: '1rem' }}>Home Access</th>
                 <th style={{ padding: '1rem' }}>Status</th>
                 <th style={{ padding: '1rem' }}>Profile</th>
               </tr>
@@ -88,8 +89,12 @@ export default async function CRMPage() {
               {clients.map((client: any) => (
                 <tr key={client.id} style={{ borderBottom: '1px solid var(--color-oatmeal)' }}>
                   <td style={{ padding: '1rem', fontWeight: 500 }}>{client.first_name} {client.last_name}</td>
-                  <td style={{ padding: '1rem', color: 'var(--color-sage-light)' }}>{client.email}</td>
-                  <td style={{ padding: '1rem' }}>{client.phone || 'N/A'}</td>
+                  <td style={{ padding: '1rem', color: 'var(--color-sage-light)' }}>
+                    <div>{client.email}</div>
+                    <div style={{ fontSize: '0.8rem' }}>{client.phone || 'No phone'}</div>
+                  </td>
+                  <td style={{ padding: '1rem' }}>{client.city ? `${client.city}, ${client.state}` : 'N/A'}</td>
+                  <td style={{ padding: '1rem' }}>{client.home_access_method || 'N/A'}</td>
                   <td style={{ padding: '1rem' }}>
                     <span style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', backgroundColor: '#D1FAE5', color: '#065F46', fontSize: '0.875rem' }}>
                       {client.status}
