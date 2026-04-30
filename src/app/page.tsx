@@ -64,7 +64,7 @@ export default function Home() {
              <div style={{ padding: "2rem", display: "flex", flexDirection: "column", flexGrow: 1 }}>
                 <h3 style={{ marginBottom: "1rem" }}>House Management</h3>
                 <div style={{ marginTop: "auto" }}>
-                   <button className="btn btn-outline" style={{ width: "100%" }}>Book House Management</button>
+                   <button className="btn btn-primary" style={{ width: "100%" }}>Book House Sitting</button>
                 </div>
              </div>
           </div>
