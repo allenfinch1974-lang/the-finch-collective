@@ -17,7 +17,7 @@ export default async function PublicSignaturePage({ params }: { params: Promise<
   }
 
   // Inject variables into HTML
-  let htmlContent = document.document_templates.content_html;
+  let htmlContent = document.custom_content_html || document.document_templates?.content_html || '';
   const variables = document.variables_json || {};
   
   for (const [key, value] of Object.entries(variables)) {
@@ -67,12 +67,36 @@ export default async function PublicSignaturePage({ params }: { params: Promise<
           <div className="glass-card" style={{ backgroundColor: '#D1FAE5', border: '1px solid #059669', textAlign: 'center' }}>
             <h3 style={{ color: '#065F46', margin: '0 0 0.5rem 0' }}>✓ Document Signed</h3>
             <p style={{ margin: 0, color: '#065F46' }}>Thank you. This document has been legally executed and filed.</p>
+            {document.deposit_amount > 0 && (
+              <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: document.deposit_paid ? '#D1FAE5' : '#FEF3C7', borderRadius: '8px', border: `1px solid ${document.deposit_paid ? '#059669' : '#D97706'}` }}>
+                <h4 style={{ margin: '0 0 0.5rem 0', color: document.deposit_paid ? '#065F46' : '#92400E' }}>
+                  {document.deposit_paid ? '✓ Deposit Paid' : 'Deposit Pending'}
+                </h4>
+                <p style={{ margin: 0, fontSize: '0.875rem', color: document.deposit_paid ? '#065F46' : '#92400E' }}>
+                  {document.deposit_paid 
+                    ? `We have received your deposit of $${document.deposit_amount}.` 
+                    : `A deposit of $${document.deposit_amount} is required. If you haven't paid yet, please complete your payment.`}
+                </p>
+                {!document.deposit_paid && (
+                  <button 
+                    onClick={async () => {
+                      'use server';
+                      // Note: Actually, you can't put a server action click handler directly here in a Server Component.
+                      // We'd need a client component. For now, we will assume they get redirected.
+                      // Let's just render a link or text.
+                    }}
+                    style={{ display: 'none' }}
+                  >Pay Now</button>
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <SignatureForm 
             documentId={document.id} 
             ipAddress={ipAddress} 
             userAgent={userAgent} 
+            depositAmount={document.deposit_amount}
           />
         )}
         

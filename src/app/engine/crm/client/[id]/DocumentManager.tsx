@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getDocumentTemplates, generateClientDocument, uploadCustomDocument } from '@/actions/document-actions';
+import { getDocumentTemplates, saveDocument, uploadCustomDocument } from '@/actions/document-actions';
 
 export default function DocumentManager({ clientId, leadId, initialDocuments }: { clientId?: string, leadId?: string, initialDocuments: any[] }) {
   const [documents, setDocuments] = useState(initialDocuments || []);
@@ -21,7 +21,7 @@ export default function DocumentManager({ clientId, leadId, initialDocuments }: 
   useEffect(() => {
     async function loadTemplates() {
       const data = await getDocumentTemplates();
-      setTemplates(data);
+      setTemplates(data.filter((t: any) => t.type !== 'Block')); // Don't show blocks here
     }
     loadTemplates();
   }, []);
@@ -39,7 +39,15 @@ export default function DocumentManager({ clientId, leadId, initialDocuments }: 
     const targetId = clientId ? clientId : leadId; // fallback
     if (!targetId) return;
 
-    const result = await generateClientDocument(targetId, selectedTemplate.id, formData.title, !!leadId);
+    const result = await saveDocument(targetId, !!leadId, {
+      title: formData.title,
+      template_id: selectedTemplate.id,
+      status: 'Sent',
+      custom_content_html: null,
+      variables_json: variables,
+      deposit_amount: 0,
+      expires_at: null
+    });
     if (result.success && result.document) {
       setDocuments([{ ...result.document, document_templates: { name: selectedTemplate.name, type: selectedTemplate.type } }, ...documents]);
       setSelectedTemplate(null);
@@ -180,10 +188,23 @@ export default function DocumentManager({ clientId, leadId, initialDocuments }: 
                   </span>
                 </td>
                 <td suppressHydrationWarning style={{ padding: '0.75rem' }}>{new Date(doc.created_at).toLocaleDateString()}</td>
-                <td style={{ padding: '0.75rem' }}>
+                <td style={{ padding: '0.75rem', display: 'flex', gap: '0.5rem' }}>
                   <button onClick={() => copyToClipboard(doc.token_url)} style={{ background: 'none', border: '1px solid var(--color-olive)', borderRadius: '4px', padding: '0.2rem 0.5rem', color: 'var(--color-olive)', cursor: 'pointer', fontSize: '0.75rem' }}>
                     Copy Link
                   </button>
+                  {doc.document_templates?.type === 'Proposal' && doc.status !== 'Converted' && (
+                    <button 
+                      onClick={async () => {
+                        const { convertProposalToContract } = await import('@/actions/document-actions');
+                        const res = await convertProposalToContract(doc.id);
+                        if (res.success) alert('Contract Drafted Successfully!');
+                        else alert(res.error);
+                      }}
+                      style={{ background: 'var(--color-olive)', border: 'none', borderRadius: '4px', padding: '0.2rem 0.5rem', color: 'white', cursor: 'pointer', fontSize: '0.75rem' }}
+                    >
+                      Convert to Contract
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

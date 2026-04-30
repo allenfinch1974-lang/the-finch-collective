@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { signDocument } from '@/actions/document-actions';
 import { useRouter } from 'next/navigation';
 
-export default function SignatureForm({ documentId, ipAddress, userAgent }: { documentId: string, ipAddress: string, userAgent: string }) {
+export default function SignatureForm({ documentId, ipAddress, userAgent, depositAmount = 0 }: { documentId: string, ipAddress: string, userAgent: string, depositAmount?: number }) {
   const [signature, setSignature] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,8 +20,29 @@ export default function SignatureForm({ documentId, ipAddress, userAgent }: { do
     const result = await signDocument(documentId, signature, ipAddress, userAgent);
     
     if (result.success) {
-      // Refresh the page to show the "Signed" success state
-      router.refresh();
+      if (depositAmount > 0) {
+        // Redirect to Stripe checkout
+        try {
+          const res = await fetch('/api/stripe/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ documentId }),
+          });
+          const data = await res.json();
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            alert('Error proceeding to payment: ' + data.error);
+            router.refresh();
+          }
+        } catch (err) {
+          console.error(err);
+          router.refresh();
+        }
+      } else {
+        // Refresh the page to show the "Signed" success state
+        router.refresh();
+      }
     } else {
       alert("Failed to process signature: " + result.error);
       setIsSubmitting(false);

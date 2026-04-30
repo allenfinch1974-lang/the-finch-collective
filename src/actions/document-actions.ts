@@ -34,47 +34,106 @@ export async function getClientDocuments(clientId: string) {
   return data;
 }
 
-export async function generateClientDocument(targetId: string, templateId: string, title: string, isLead: boolean = false, variables: any = {}) {
+export async function saveDocument(
+  targetId: string, 
+  isLead: boolean, 
+  data: {
+    title: string;
+    template_id: string;
+    status: string;
+    custom_content_html: string | null;
+    variables_json: any;
+    deposit_amount: number;
+    expires_at: string | null;
+    origin_proposal_id?: string;
+    document_id?: string;
+  }
+) {
   if (!supabase) return { success: false, error: 'Supabase not configured' };
   
-  // Generate a secure 32-character hex token
-  const tokenUrl = crypto.randomBytes(16).toString('hex');
-  
   const payload: any = {
-    template_id: templateId,
-    title: title,
-    variables_json: variables,
-    token_url: tokenUrl,
-    status: 'Sent'
+    title: data.title,
+    template_id: data.template_id,
+    status: data.status,
+    custom_content_html: data.custom_content_html,
+    variables_json: data.variables_json,
+    deposit_amount: data.deposit_amount,
+    expires_at: data.expires_at || null,
+    origin_proposal_id: data.origin_proposal_id || null
   };
 
   if (isLead) payload.lead_id = targetId;
   else payload.client_id = targetId;
 
-  const { data, error } = await supabase
-    .from('documents')
-    .insert([payload])
-    .select()
-    .single();
-    
-  if (error) {
-    console.error('Error creating document:', error);
-    return { success: false, error: error.message };
+  let resultDoc;
+
+  if (data.document_id) {
+    const { data: updated, error } = await supabase
+      .from('documents')
+      .update(payload)
+      .eq('id', data.document_id)
+      .select()
+      .single();
+    if (error) return { success: false, error: error.message };
+    resultDoc = updated;
+  } else {
+    payload.token_url = crypto.randomBytes(16).toString('hex');
+    const { data: inserted, error } = await supabase
+      .from('documents')
+      .insert([payload])
+      .select()
+      .single();
+    if (error) return { success: false, error: error.message };
+    resultDoc = inserted;
   }
   
-  // Log this interaction
-  await supabase.from('interaction_logs').insert([{
-    client_id: isLead ? null : targetId,
-    lead_id: isLead ? targetId : null,
-    interaction_type: 'System',
-    content: `Document generated and sent: ${title}`,
-    performed_by: 'Admin'
-  }]);
+  if (data.status === 'Sent') {
+    await supabase.from('interaction_logs').insert([{
+      client_id: isLead ? null : targetId,
+      lead_id: isLead ? targetId : null,
+      interaction_type: 'System',
+      content: `Document sent: ${data.title}`,
+      performed_by: 'Admin'
+    }]);
+  }
   
   if (isLead) revalidatePath(`/engine/crm/lead/${targetId}`);
   else revalidatePath(`/engine/crm/client/${targetId}`);
   
-  return { success: true, document: data };
+  return { success: true, document: resultDoc };
+}
+
+export async function convertProposalToContract(proposalId: string) {
+  if (!supabase) return { success: false, error: 'Supabase not configured' };
+  
+  const { data: proposal } = await supabase.from('documents').select('*').eq('id', proposalId).single();
+  if (!proposal) return { success: false, error: 'Proposal not found' };
+
+  await supabase.from('documents').update({ status: 'Signed' }).eq('id', proposalId);
+
+  const { data: contractTemplate } = await supabase.from('document_templates').select('id').eq('type', 'Contract').limit(1).single();
+
+  const newPayload = {
+    title: `Contract: ${proposal.title}`,
+    template_id: contractTemplate?.id,
+    status: 'Draft',
+    custom_content_html: proposal.custom_content_html, 
+    variables_json: proposal.variables_json,
+    deposit_amount: proposal.deposit_amount,
+    origin_proposal_id: proposal.id,
+    token_url: crypto.randomBytes(16).toString('hex'),
+    client_id: proposal.client_id,
+    lead_id: proposal.lead_id
+  };
+
+  const { data: contract, error } = await supabase.from('documents').insert([newPayload]).select().single();
+
+  if (error) return { success: false, error: error.message };
+  
+  if (proposal.client_id) revalidatePath(`/engine/crm/client/${proposal.client_id}`);
+  else revalidatePath(`/engine/crm/lead/${proposal.lead_id}`);
+
+  return { success: true, document: contract };
 }
 
 
