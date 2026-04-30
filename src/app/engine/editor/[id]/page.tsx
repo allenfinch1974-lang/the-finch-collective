@@ -6,8 +6,9 @@ import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
-export default async function PageBuilderRoute({ params }: { params: { id: string } }) {
-  const pageData = await getPageById(params.id);
+export default async function PageBuilderRoute({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const pageData = await getPageById(resolvedParams.id);
 
   if (!pageData) {
     notFound();

@@ -4,8 +4,9 @@ import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
-export default async function DynamicPage({ params }: { params: { slug: string[] } }) {
-  const path = params.slug.join('/');
+export default async function DynamicPage({ params }: { params: Promise<{ slug: string[] }> }) {
+  const resolvedParams = await params;
+  const path = resolvedParams.slug.join('/');
   const pageData = await getPageBySlug(path);
 
   // If page doesn't exist or isn't published, throw a 404.
