@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { getAllPages } from '@/actions/page-builder-actions';
 import CreatePageForm from '@/components/CreatePageForm';
+import DeletePageButton from '@/components/DeletePageButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,13 +61,14 @@ export default async function PageManager() {
               <h3 style={{ margin: 0 }}>{page.title}</h3>
               <p style={{ fontSize: '0.875rem', color: 'var(--color-sage-light)', margin: 0 }}>/{page.slug}</p>
             </div>
-            <div>
-              <span style={{ display: 'inline-block', padding: '0.25rem 0.5rem', backgroundColor: page.is_published ? '#D1FAE5' : '#FEE2E2', color: page.is_published ? '#065F46' : '#991B1B', fontSize: '0.75rem', borderRadius: '4px', marginRight: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <span style={{ display: 'inline-block', padding: '0.25rem 0.5rem', backgroundColor: page.is_published ? '#D1FAE5' : '#FEE2E2', color: page.is_published ? '#065F46' : '#991B1B', fontSize: '0.75rem', borderRadius: '4px' }}>
                 {page.is_published ? 'Published' : 'Draft'}
               </span>
               <Link href={`/engine/editor/${page.id}`} className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
                 Builder
               </Link>
+              <DeletePageButton id={page.id} />
             </div>
           </div>
         ))}

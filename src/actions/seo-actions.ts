@@ -45,3 +45,24 @@ export async function updateSeoPageData(slug: string, formData: any) {
     return { success: false, error: err.message };
   }
 }
+
+export async function deleteSeoPage(slug: string) {
+  try {
+    const { error } = await supabase
+      .from('seo_content')
+      .delete()
+      .eq('slug', slug);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    revalidatePath(`/${slug}`);
+    revalidatePath('/engine/editor');
+    
+    return { success: true };
+  } catch (err: any) {
+    console.error(`Failed to delete SEO content for ${slug}:`, err);
+    return { success: false, error: err.message };
+  }
+}

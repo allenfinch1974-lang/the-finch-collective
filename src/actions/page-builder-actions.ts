@@ -72,3 +72,10 @@ export async function deleteBlock(block_id: string, page_slug: string) {
   revalidatePath(`/${page_slug}`);
   return { success: true };
 }
+
+export async function deletePage(id: string) {
+  const { error } = await supabase.from('pages').delete().eq('id', id);
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/engine/editor');
+  return { success: true };
+}
