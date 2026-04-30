@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
 import { notFound } from 'next/navigation';
 import { getInteractionLogs, getClientTags } from '@/actions/crm-actions';
+import { getClientDocuments } from '@/actions/document-actions';
 import InteractionTimeline from './InteractionTimeline';
 import ClientTags from './ClientTags';
+import DocumentManager from './DocumentManager';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,9 +35,10 @@ export default async function ClientProfileRoute({ params }: { params: Promise<{
     .select('*')
     .eq('client_id', clientId);
 
-  // Fetch tags and logs
+  // Fetch tags, logs, documents
   const tags = await getClientTags(clientId);
   const logs = await getInteractionLogs(clientId);
+  const documents = await getClientDocuments(clientId);
 
   return (
     <div style={{ padding: '3rem 4rem', maxWidth: '1400px', margin: '0 auto' }}>
@@ -63,7 +66,7 @@ export default async function ClientProfileRoute({ params }: { params: Promise<{
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>
         
-        {/* Left Column: Details & Pets */}
+        {/* Left Column: Details, Pets, Documents */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           <section className="glass-card">
             <h2 style={{ fontSize: '1.25rem', color: 'var(--color-olive-dark)', marginBottom: '1.5rem', borderBottom: '1px solid var(--color-oatmeal)', paddingBottom: '0.5rem' }}>
@@ -109,6 +112,8 @@ export default async function ClientProfileRoute({ params }: { params: Promise<{
               <p style={{ color: 'var(--color-taupe)' }}>No pets associated with this client.</p>
             )}
           </section>
+
+          <DocumentManager clientId={clientId} initialDocuments={documents} />
         </div>
 
         {/* Right Column: Interaction Timeline */}
