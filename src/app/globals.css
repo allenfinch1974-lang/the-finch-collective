@@ -126,6 +126,18 @@ a {
   border-radius: 12px;
   padding: 2rem;
   box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.service-card {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.service-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 15px 35px rgba(138, 154, 91, 0.4); /* Glow using sage color */
+  border-color: var(--color-sage-light);
+  z-index: 10;
 }
 
 /* Layout Utilities */
