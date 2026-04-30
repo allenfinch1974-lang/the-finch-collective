@@ -50,9 +50,7 @@ export default function Home() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "2rem", alignItems: "stretch" }}>
           <div className="glass-card service-card" style={{ padding: "0", overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}>
-             <div style={{ height: "220px", display: "flex", alignItems: "center", justifyItems: "center", padding: "1rem" }}>
-               <img src="/images/finch_pet_sitting_dog_walking.svg" alt="Pet Sitting & Dog Walking Services" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
-             </div>
+             <img src="/images/finch_pet_sitting_dog_walking.svg" alt="Pet Sitting & Dog Walking Services" style={{ width: "100%", height: "auto", display: "block" }} />
              <div style={{ padding: "2rem", display: "flex", flexDirection: "column", flexGrow: 1 }}>
                 <h3 style={{ marginBottom: "1rem" }}>Pet Sitting & Walking</h3>
                 <div style={{ marginTop: "auto" }}>
@@ -62,9 +60,7 @@ export default function Home() {
           </div>
 
           <div className="glass-card service-card" style={{ padding: "0", overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}>
-             <div style={{ height: "220px", display: "flex", alignItems: "center", justifyItems: "center", padding: "1rem" }}>
-               <img src="/images/finch_house_sitting.svg" alt="House Sitting Services" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
-             </div>
+             <img src="/images/finch_house_sitting.svg" alt="House Sitting Services" style={{ width: "100%", height: "auto", display: "block" }} />
              <div style={{ padding: "2rem", display: "flex", flexDirection: "column", flexGrow: 1 }}>
                 <h3 style={{ marginBottom: "1rem" }}>House Management</h3>
                 <div style={{ marginTop: "auto" }}>
@@ -74,9 +70,7 @@ export default function Home() {
           </div>
 
           <div className="glass-card service-card" style={{ padding: "0", overflow: "hidden", borderTop: "4px solid var(--color-olive)", display: "flex", flexDirection: "column", height: "100%" }}>
-             <div style={{ height: "220px", display: "flex", alignItems: "center", justifyItems: "center", padding: "1rem" }}>
-               <img src="/images/finch_overnight.svg" alt="Overnight Pet Sitting" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
-             </div>
+             <img src="/images/finch_overnight.svg" alt="Overnight Pet Sitting" style={{ width: "100%", height: "auto", display: "block" }} />
              <div style={{ padding: "2rem", display: "flex", flexDirection: "column", flexGrow: 1 }}>
                 <h3 style={{ marginBottom: "1rem" }}>Overnight Sitting</h3>
                 <div style={{ marginTop: "auto" }}>
