@@ -3,17 +3,18 @@
 import React, { useState } from 'react';
 import { addInteractionLog } from '@/actions/crm-actions';
 
-export default function InteractionTimeline({ clientId, initialLogs }: { clientId: string, initialLogs: any[] }) {
-  const [logs, setLogs] = useState(initialLogs);
+export default function InteractionTimeline({ clientId, leadId, initialLogs }: { clientId?: string, leadId?: string, initialLogs: any[] }) {
+  const [logs, setLogs] = useState(initialLogs || []);
   const [newNote, setNewNote] = useState('');
+  const [interactionType, setInteractionType] = useState('Note');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmitNote = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNote.trim()) return;
     
     setIsSubmitting(true);
-    const result = await addInteractionLog(newNote, 'Note', clientId);
+    const result = await addInteractionLog(newNote, interactionType, clientId, leadId);
     
     if (result.success && result.log) {
       setLogs([result.log, ...logs]); // add to top
@@ -41,7 +42,7 @@ export default function InteractionTimeline({ clientId, initialLogs }: { clientI
       </h2>
 
       {/* Note Input */}
-      <form onSubmit={handleSubmitNote} style={{ marginBottom: '2rem' }}>
+      <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
         <textarea 
           value={newNote}
           onChange={(e) => setNewNote(e.target.value)}

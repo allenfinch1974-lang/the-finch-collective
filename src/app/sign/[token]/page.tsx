@@ -42,15 +42,25 @@ export default async function PublicSignaturePage({ params }: { params: Promise<
           <div style={{ borderBottom: '2px solid var(--color-oatmeal-dark)', paddingBottom: '1rem', marginBottom: '2rem' }}>
             <h2 style={{ fontSize: '1.5rem', margin: 0, color: 'var(--color-charcoal)' }}>{document.title}</h2>
             <p style={{ margin: 0, color: 'var(--color-taupe)' }}>
-              Prepared for: <strong>{document.clients?.first_name} {document.clients?.last_name}</strong>
+              Prepared for: <strong>{document.clients?.first_name || document.leads?.first_name} {document.clients?.last_name || document.leads?.last_name}</strong>
             </p>
           </div>
 
           {/* The Document Content */}
-          <div 
-            style={{ fontSize: '1rem', color: 'var(--color-charcoal)' }}
-            dangerouslySetInnerHTML={{ __html: htmlContent }} 
-          />
+          {document.file_url ? (
+            <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: 'var(--color-oatmeal-light)', borderRadius: '8px', border: '1px solid var(--color-taupe)' }}>
+              <h3 style={{ margin: '0 0 1rem 0' }}>Attached Document</h3>
+              <p style={{ marginBottom: '1.5rem' }}>Please review the attached document before signing below.</p>
+              <a href={document.file_url} target="_blank" rel="noreferrer" className="btn btn-outline" style={{ display: 'inline-block', textDecoration: 'none' }}>
+                📄 Open Document
+              </a>
+            </div>
+          ) : (
+            <div 
+              style={{ fontSize: '1rem', color: 'var(--color-charcoal)' }}
+              dangerouslySetInnerHTML={{ __html: htmlContent }} 
+            />
+          )}
         </main>
 
         {document.status === 'Signed' ? (

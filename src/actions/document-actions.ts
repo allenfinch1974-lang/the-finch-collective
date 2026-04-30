@@ -71,6 +71,62 @@ export async function generateClientDocument(clientId: string, templateId: strin
 }
 
 
+export async function uploadCustomDocument(clientId: string | undefined, leadId: string | undefined, title: string, formData: FormData) {
+  if (!supabase) return { success: false, error: 'Supabase not configured' };
+  
+  const file = formData.get('file') as File;
+  if (!file) return { success: false, error: 'No file provided' };
+  
+  // 1. Upload file to storage
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+  const filePath = `custom/${fileName}`;
+  
+  const { error: uploadError } = await supabase.storage
+    .from('documents')
+    .upload(filePath, file);
+    
+  if (uploadError) {
+    console.error('Error uploading file:', uploadError);
+    return { success: false, error: uploadError.message };
+  }
+  
+  const { data: publicUrlData } = supabase.storage.from('documents').getPublicUrl(filePath);
+  const fileUrl = publicUrlData.publicUrl;
+  
+  // 2. Create document record
+  const token = crypto.randomBytes(16).toString('hex');
+  const payload: any = { title, token_url: token, file_url: fileUrl, status: 'Sent' };
+  if (clientId) payload.client_id = clientId;
+  if (leadId) payload.lead_id = leadId;
+  
+  const { data, error } = await supabase
+    .from('documents')
+    .insert([payload])
+    .select()
+    .single();
+    
+  if (error) {
+    console.error('Error creating document record:', error);
+    return { success: false, error: error.message };
+  }
+  
+  // Log this interaction
+  await supabase.from('interaction_logs').insert([{
+    client_id: clientId || null,
+    lead_id: leadId || null,
+    interaction_type: 'System',
+    content: `Custom document uploaded and sent: ${title}`,
+    performed_by: 'Admin'
+  }]);
+  
+  if (clientId) revalidatePath(`/engine/crm/client/${clientId}`);
+  if (leadId) revalidatePath(`/engine/crm/lead/${leadId}`);
+  
+  return { success: true, document: data };
+}
+
+
 // --- Public Client-Facing Actions ---
 
 export async function getDocumentByToken(token: string) {
@@ -79,8 +135,9 @@ export async function getDocumentByToken(token: string) {
     .from('documents')
     .select(`
       *,
-      document_templates(content_html, type),
-      clients(first_name, last_name, email)
+      document_templates (content_html),
+      clients (first_name, last_name),
+      leads (first_name, last_name)
     `)
     .eq('token_url', token)
     .single();

@@ -191,3 +191,44 @@ export async function removeTagFromClient(clientId: string, tagId: string) {
   revalidatePath(`/engine/crm/client/${clientId}`);
   return { success: true };
 }
+
+export async function getLeadTags(leadId: string) {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('lead_tags')
+    .select(`
+      tag_id,
+      tags (
+        id,
+        name,
+        color
+      )
+    `)
+    .eq('lead_id', leadId);
+    
+  if (error) return [];
+  return data.map((t: any) => t.tags);
+}
+
+export async function addTagToLead(leadId: string, tagId: string) {
+  if (!supabase) return { success: false, error: "Supabase not configured" };
+  const { error } = await supabase
+    .from('lead_tags')
+    .insert([{ lead_id: leadId, tag_id: tagId }]);
+    
+  if (error) return { success: false, error: error.message };
+  revalidatePath(`/engine/crm/lead/${leadId}`);
+  return { success: true };
+}
+
+export async function removeTagFromLead(leadId: string, tagId: string) {
+  if (!supabase) return { success: false, error: "Supabase not configured" };
+  const { error } = await supabase
+    .from('lead_tags')
+    .delete()
+    .match({ lead_id: leadId, tag_id: tagId });
+    
+  if (error) return { success: false, error: error.message };
+  revalidatePath(`/engine/crm/lead/${leadId}`);
+  return { success: true };
+}
