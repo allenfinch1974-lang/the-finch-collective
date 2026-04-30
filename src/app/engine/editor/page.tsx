@@ -1,27 +1,61 @@
 import React from 'react';
-import { getWebsiteSettings } from '@/actions/cms-actions';
-import WebsiteEditorForm from '@/components/WebsiteEditorForm';
+import Link from 'next/link';
+import { getAllPages } from '@/actions/page-builder-actions';
+import CreatePageForm from '@/components/CreatePageForm';
 
 export const dynamic = 'force-dynamic';
 
-export default async function WebsiteEditorPage() {
-  const initialData = await getWebsiteSettings();
+export default async function PageManager() {
+  const pages = await getAllPages();
 
   return (
-    <div>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', color: 'var(--color-olive-dark)' }}>Website Editor</h1>
-        <p style={{ color: 'var(--color-sage)' }}>Update the text on the public-facing Finch Collective website.</p>
+    <div style={{ padding: '2rem' }}>
+      <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <h1 style={{ fontSize: '2rem', color: 'var(--color-olive-dark)' }}>Website Manager</h1>
+          <p style={{ color: 'var(--color-sage)' }}>Manage your static homepage or build new dynamic pages.</p>
+        </div>
+        <CreatePageForm />
       </div>
 
-      {!initialData ? (
-        <div style={{ padding: '2rem', backgroundColor: '#FEE2E2', color: '#991B1B', borderRadius: '8px' }}>
-          <strong>Error connecting to CMS Database.</strong> Please ensure you have run the <br />
-          <code>02_cms_schema.sql</code> migration in your Supabase SQL Editor.
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        
+        {/* The Homepage (Bespoke) */}
+        <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h3 style={{ margin: 0 }}>Homepage</h3>
+            <p style={{ fontSize: '0.875rem', color: 'var(--color-sage-light)', margin: 0 }}>/</p>
+          </div>
+          <div>
+            <span style={{ display: 'inline-block', padding: '0.25rem 0.5rem', backgroundColor: '#D1FAE5', color: '#065F46', fontSize: '0.75rem', borderRadius: '4px', marginRight: '1rem' }}>Published</span>
+            <Link href="/engine/editor/homepage" className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+              Edit Homepage
+            </Link>
+          </div>
         </div>
-      ) : (
-        <WebsiteEditorForm initialData={initialData} />
-      )}
+
+        {/* Dynamic Pages */}
+        {pages?.map((page: any) => (
+          <div key={page.id} className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h3 style={{ margin: 0 }}>{page.title}</h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--color-sage-light)', margin: 0 }}>/{page.slug}</p>
+            </div>
+            <div>
+              <span style={{ display: 'inline-block', padding: '0.25rem 0.5rem', backgroundColor: page.is_published ? '#D1FAE5' : '#FEE2E2', color: page.is_published ? '#065F46' : '#991B1B', fontSize: '0.75rem', borderRadius: '4px', marginRight: '1rem' }}>
+                {page.is_published ? 'Published' : 'Draft'}
+              </span>
+              <Link href={`/engine/editor/${page.id}`} className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+                Builder
+              </Link>
+            </div>
+          </div>
+        ))}
+
+        {pages && pages.length === 0 && (
+          <p style={{ textAlign: 'center', color: 'var(--color-taupe)', padding: '2rem' }}>No dynamic pages created yet.</p>
+        )}
+      </div>
     </div>
   );
 }
