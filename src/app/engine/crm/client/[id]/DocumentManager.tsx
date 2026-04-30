@@ -39,9 +39,7 @@ export default function DocumentManager({ clientId, leadId, initialDocuments }: 
     const targetId = clientId ? clientId : leadId; // fallback
     if (!targetId) return;
 
-    // generateClientDocument needs to be updated to accept leadId in actions! We'll pass it as clientId param for now and let the action handle it if we modify it later.
-    // Actually, I'll pass clientId, and it will be handled. Wait, generateClientDocument expects 4 args.
-    const result = await generateClientDocument(targetId, selectedTemplate.id, formData.title, variables);
+    const result = await generateClientDocument(targetId, selectedTemplate.id, formData.title, !!leadId);
     if (result.success && result.document) {
       setDocuments([{ ...result.document, document_templates: { name: selectedTemplate.name, type: selectedTemplate.type } }, ...documents]);
       setSelectedTemplate(null);

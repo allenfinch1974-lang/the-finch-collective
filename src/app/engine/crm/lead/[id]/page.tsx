@@ -7,6 +7,8 @@ import { getClientDocuments } from '@/actions/document-actions';
 import InteractionTimeline from '../../client/[id]/InteractionTimeline';
 import DocumentManager from '../../client/[id]/DocumentManager';
 import LeadTags from './LeadTags';
+import QuickDocumentButtons from '../../components/QuickDocumentButtons';
+import { getDocumentTemplates } from '@/actions/document-actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,6 +45,8 @@ export default async function LeadProfileRoute({ params }: { params: Promise<{ i
     .order('created_at', { ascending: false });
   documents = docs || [];
 
+  const templates = await getDocumentTemplates();
+
   return (
     <div style={{ padding: '3rem 4rem', maxWidth: '1400px', margin: '0 auto' }}>
       <div style={{ marginBottom: '2rem' }}>
@@ -64,8 +68,9 @@ export default async function LeadProfileRoute({ params }: { params: Promise<{ i
           </p>
           <LeadTags leadId={leadId} initialTags={tags} />
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button className="btn btn-outline">Convert to Client</button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
+          <button className="btn btn-outline" style={{ width: '100%' }}>Convert to Client</button>
+          <QuickDocumentButtons targetId={leadId} isLead={true} templates={templates} />
         </div>
       </header>
 

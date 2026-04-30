@@ -7,6 +7,8 @@ import { getClientDocuments } from '@/actions/document-actions';
 import InteractionTimeline from './InteractionTimeline';
 import ClientTags from './ClientTags';
 import DocumentManager from './DocumentManager';
+import QuickDocumentButtons from '../../components/QuickDocumentButtons';
+import { getDocumentTemplates } from '@/actions/document-actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,6 +41,7 @@ export default async function ClientProfileRoute({ params }: { params: Promise<{
   const tags = await getClientTags(clientId);
   const logs = await getInteractionLogs(clientId);
   const documents = await getClientDocuments(clientId);
+  const templates = await getDocumentTemplates();
 
   return (
     <div style={{ padding: '3rem 4rem', maxWidth: '1400px', margin: '0 auto' }}>
@@ -58,10 +61,7 @@ export default async function ClientProfileRoute({ params }: { params: Promise<{
           </p>
           <ClientTags clientId={clientId} initialTags={tags} />
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button className="btn btn-outline">Edit Profile</button>
-          <button className="btn btn-primary">Create Proposal</button>
-        </div>
+        <QuickDocumentButtons targetId={clientId} isLead={false} templates={templates} />
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>

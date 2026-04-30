@@ -30,6 +30,9 @@ export default function EngineLayout({
           <Link href="/engine/crm" style={{ textDecoration: 'none', color: 'var(--color-charcoal)', fontWeight: 500, padding: '0.75rem 1rem', borderRadius: '8px', transition: 'background 0.2s' }}>
             CRM & Leads
           </Link>
+          <Link href="/engine/calendar" style={{ textDecoration: 'none', color: 'var(--color-charcoal)', fontWeight: 500, padding: '0.75rem 1rem', borderRadius: '8px', transition: 'background 0.2s' }}>
+            Universal Calendar
+          </Link>
           <Link href="/engine/editor" style={{ textDecoration: 'none', color: 'var(--color-charcoal)', fontWeight: 500, padding: '0.75rem 1rem', borderRadius: '8px', transition: 'background 0.2s' }}>
             Website Editor (CMS)
           </Link>
