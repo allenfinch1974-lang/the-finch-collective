@@ -70,7 +70,7 @@ export default async function LeadProfileRoute({ params }: { params: Promise<{ i
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
           <button className="btn btn-outline" style={{ width: '100%' }}>Convert to Client</button>
-          <QuickDocumentButtons targetId={leadId} isLead={true} templates={templates} />
+          <QuickDocumentButtons targetId={leadId} isLead={true} templates={templates} personData={lead} />
         </div>
       </header>
 

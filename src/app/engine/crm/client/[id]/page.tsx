@@ -61,7 +61,7 @@ export default async function ClientProfileRoute({ params }: { params: Promise<{
           </p>
           <ClientTags clientId={clientId} initialTags={tags} />
         </div>
-        <QuickDocumentButtons targetId={clientId} isLead={false} templates={templates} />
+        <QuickDocumentButtons targetId={clientId} isLead={false} templates={templates} personData={client} />
       </header>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>

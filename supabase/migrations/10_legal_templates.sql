@@ -1,12 +1,10 @@
 -- Migration: Legal Templates Update
 -- Replaces existing document templates with comprehensive legal language and auto-populating variables.
 
--- 1. Clear existing templates to avoid duplicates (optional, assuming we just want the new ones)
-DELETE FROM public.document_templates;
-
--- 2. Insert new comprehensive templates
-INSERT INTO public.document_templates (name, type, content_html) VALUES 
-('Standard Service Contract Agreement', 'Contract', '
+-- Update the existing Contract template
+UPDATE public.document_templates 
+SET name = 'Standard Service Contract Agreement',
+    content_html = '
 <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px;">
   <h2 style="color: #2F4F4F; text-align: center; text-transform: uppercase;">Service Contract Agreement</h2>
   <p>This Service Contract Agreement (the "Agreement") is entered into as of the date of electronic signature below, by and between <strong>The Finch Collective</strong> ("Provider") and <strong>{{client_name}}</strong> ("Client").</p>
@@ -30,9 +28,13 @@ INSERT INTO public.document_templates (name, type, content_html) VALUES
     By signing below electronically, the Client acknowledges that they have read, understood, and agree to be bound by all terms and conditions contained in this Agreement.
   </p>
 </div>
-'),
+'
+WHERE type = 'Contract';
 
-('Premium Service Proposal', 'Proposal', '
+-- Update the existing Proposal template
+UPDATE public.document_templates 
+SET name = 'Premium Service Proposal',
+    content_html = '
 <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px;">
   <h2 style="color: #2F4F4F; text-align: center; text-transform: uppercase;">Service Proposal</h2>
   <div style="background-color: #f9fafb; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
@@ -52,9 +54,13 @@ INSERT INTO public.document_templates (name, type, content_html) VALUES
     By signing below, you are formally accepting this Proposal and authorizing The Finch Collective to proceed with onboarding.
   </p>
 </div>
-'),
+'
+WHERE type = 'Proposal';
 
-('Liability Waiver & Consent Form', 'Waiver', '
+-- Update the existing Waiver template
+UPDATE public.document_templates 
+SET name = 'Liability Waiver & Consent Form',
+    content_html = '
 <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px;">
   <h2 style="color: #2F4F4F; text-align: center; text-transform: uppercase;">Liability Waiver & Emergency Consent</h2>
   <p>I, <strong>{{client_name}}</strong>, hereby authorize The Finch Collective ("Provider") to perform services at <strong>{{client_address}}</strong>.</p>
@@ -75,4 +81,5 @@ INSERT INTO public.document_templates (name, type, content_html) VALUES
     I HAVE CAREFULLY READ THIS AGREEMENT, FULLY UNDERSTAND ITS TERMS, AND SIGN IT FREELY AND VOLUNTARILY WITHOUT ANY INDUCEMENT.
   </p>
 </div>
-');
+'
+WHERE type = 'Waiver';

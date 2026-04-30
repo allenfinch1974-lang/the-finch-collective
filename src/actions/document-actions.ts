@@ -34,31 +34,9 @@ export async function getClientDocuments(clientId: string) {
   return data;
 }
 
-export async function generateClientDocument(targetId: string, templateId: string, title: string, isLead: boolean = false) {
+export async function generateClientDocument(targetId: string, templateId: string, title: string, isLead: boolean = false, variables: any = {}) {
   if (!supabase) return { success: false, error: 'Supabase not configured' };
   
-  // 1. Fetch Client or Lead Data
-  let person: any = null;
-  if (isLead) {
-    const { data } = await supabase.from('leads').select('*').eq('id', targetId).single();
-    person = data;
-  } else {
-    const { data } = await supabase.from('clients').select('*').eq('id', targetId).single();
-    person = data;
-  }
-
-  if (!person) return { success: false, error: 'Client or Lead not found.' };
-
-  // 2. Auto-Populate Variables
-  const variables = {
-    client_name: `${person.first_name} ${person.last_name}`,
-    client_email: person.email || 'No email provided',
-    client_phone: person.phone || 'No phone provided',
-    client_address: person.address || 'No address provided',
-    access_method: person.home_access_method || 'To be determined',
-    service_package: person.service_package || 'Standard Services'
-  };
-
   // Generate a secure 32-character hex token
   const tokenUrl = crypto.randomBytes(16).toString('hex');
   
