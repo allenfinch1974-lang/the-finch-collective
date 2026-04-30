@@ -72,15 +72,15 @@ export default function PageBuilder({ initialPage }: { initialPage: any }) {
             </div>
 
             {block.block_type === 'hero' && (
-              <HeroBlockEditor block={block} onChange={(content) => handleUpdateBlock(block.id, content)} />
+              <HeroBlockEditor block={block} onChange={(content: any) => handleUpdateBlock(block.id, content)} />
             )}
             
             {block.block_type === 'text_split' && (
-              <TextSplitBlockEditor block={block} onChange={(content) => handleUpdateBlock(block.id, content)} />
+              <TextSplitBlockEditor block={block} onChange={(content: any) => handleUpdateBlock(block.id, content)} />
             )}
             
             {block.block_type === 'services_grid' && (
-              <ServicesGridBlockEditor block={block} onChange={(content) => handleUpdateBlock(block.id, content)} />
+              <ServicesGridBlockEditor block={block} onChange={(content: any) => handleUpdateBlock(block.id, content)} />
             )}
           </div>
         ))}
