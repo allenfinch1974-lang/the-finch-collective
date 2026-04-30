@@ -1,5 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
+import KanbanBoard from '@/components/KanbanBoard';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,8 +17,8 @@ export default async function CRMPage() {
   } else {
     // Mock data
     leads = [
-      { id: '1', first_name: 'Eleanor', last_name: 'Vance', email: 'eleanor.v@example.com', service_package: 'The Executive Suite', status: 'New', created_at: new Date().toISOString() },
-      { id: '2', first_name: 'Arthur', last_name: 'Pendleton', email: 'arthur.p@example.com', service_package: 'The Chauffeur', status: 'Contacted', created_at: new Date().toISOString() }
+      { id: '1', first_name: 'Eleanor', last_name: 'Vance', email: 'eleanor.v@example.com', service_package: 'The Executive Suite', pipeline_stage: 'Inquiry', created_at: new Date().toISOString() },
+      { id: '2', first_name: 'Arthur', last_name: 'Pendleton', email: 'arthur.p@example.com', service_package: 'The Chauffeur', pipeline_stage: 'Consultation', created_at: new Date().toISOString() }
     ];
     clients = [
       { id: '1', first_name: 'Victoria', last_name: 'Sterling', email: 'victoria.sterling@example.com', phone: '910-555-0199', status: 'Active' }
@@ -33,41 +35,10 @@ export default async function CRMPage() {
         <button className="btn btn-primary">Add Client Manually</button>
       </header>
 
-      {/* Leads Table */}
-      <div style={{ backgroundColor: 'var(--color-white)', borderRadius: '12px', padding: '2rem', boxShadow: 'var(--shadow-sm)', marginBottom: '3rem' }}>
-        <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: 'var(--color-olive-dark)' }}>Active Leads Pipeline</h2>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-            <thead>
-              <tr style={{ borderBottom: '2px solid var(--color-oatmeal)', color: 'var(--color-sage-light)' }}>
-                <th style={{ padding: '1rem' }}>Name</th>
-                <th style={{ padding: '1rem' }}>Email</th>
-                <th style={{ padding: '1rem' }}>Service Requested</th>
-                <th style={{ padding: '1rem' }}>Date</th>
-                <th style={{ padding: '1rem' }}>Status</th>
-                <th style={{ padding: '1rem' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leads.map((lead: any) => (
-                <tr key={lead.id} style={{ borderBottom: '1px solid var(--color-oatmeal)' }}>
-                  <td style={{ padding: '1rem', fontWeight: 500 }}>{lead.first_name} {lead.last_name}</td>
-                  <td style={{ padding: '1rem', color: 'var(--color-sage-light)' }}>{lead.email}</td>
-                  <td style={{ padding: '1rem' }}>{lead.service_package}</td>
-                  <td style={{ padding: '1rem', color: 'var(--color-sage-light)' }}>{new Date(lead.created_at).toLocaleDateString()}</td>
-                  <td style={{ padding: '1rem' }}>
-                    <span style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', backgroundColor: lead.status === 'New' ? '#FEE2E2' : '#E0E7FF', color: lead.status === 'New' ? '#991B1B' : '#3730A3', fontSize: '0.875rem' }}>
-                      {lead.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: '1rem' }}>
-                    <button style={{ background: 'none', border: 'none', color: 'var(--color-olive)', cursor: 'pointer', fontWeight: 600 }}>Review</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* Leads Pipeline Kanban */}
+      <div style={{ marginBottom: '4rem' }}>
+        <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--color-olive-dark)' }}>Active Sales Pipeline</h2>
+        <KanbanBoard initialLeads={leads} />
       </div>
 
       {/* Clients Table */}
@@ -101,7 +72,7 @@ export default async function CRMPage() {
                     </span>
                   </td>
                   <td style={{ padding: '1rem' }}>
-                    <button style={{ background: 'none', border: 'none', color: 'var(--color-olive)', cursor: 'pointer', fontWeight: 600 }}>View Details</button>
+                    <Link href={`/engine/crm/client/${client.id}`} style={{ color: 'var(--color-olive)', fontWeight: 600, textDecoration: 'none' }}>View Details</Link>
                   </td>
                 </tr>
               ))}
