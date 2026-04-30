@@ -34,7 +34,26 @@ export default async function PageManager() {
           </div>
         </div>
 
+        {/* SEO Landing Pages */}
+        <h2 style={{ fontSize: '1.25rem', marginTop: '1rem', marginBottom: '0.5rem' }}>SEO Landing Pages</h2>
+        
+        {['southern-pines', 'forest-creek', 'pinehurst-no-2', 'service-area', 'alternative-to-rover-pinehurst'].map(slug => (
+          <div key={slug} className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h3 style={{ margin: 0 }}>{slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</h3>
+              <p style={{ fontSize: '0.875rem', color: 'var(--color-sage-light)', margin: 0 }}>/{slug}</p>
+            </div>
+            <div>
+              <span style={{ display: 'inline-block', padding: '0.25rem 0.5rem', backgroundColor: '#D1FAE5', color: '#065F46', fontSize: '0.75rem', borderRadius: '4px', marginRight: '1rem' }}>Published</span>
+              <Link href={`/engine/editor/seo/${slug}`} className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+                Edit Landing Page
+              </Link>
+            </div>
+          </div>
+        ))}
+
         {/* Dynamic Pages */}
+        <h2 style={{ fontSize: '1.25rem', marginTop: '1rem', marginBottom: '0.5rem' }}>Custom Pages</h2>
         {pages?.map((page: any) => (
           <div key={page.id} className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
