@@ -48,18 +48,28 @@ export default function Home() {
           We don't just "watch" pets. We manage their lifestyle. Choose from our luxury service tiers designed for discerning households.
         </p>
 
-        <div className="grid-2" style={{ alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "2rem", alignItems: "start" }}>
           <div className="glass-card" style={{ padding: "0", overflow: "hidden" }}>
-             <img src="/images/pet-sitting-flyer.jpg" alt="Pet Sitting & Dog Walking Services" style={{ width: "100%", display: "block" }} />
+             <img src="/images/finch_pet_sitting_dog_walking.svg" alt="Pet Sitting & Dog Walking Services" style={{ width: "100%", height: "auto", display: "block" }} />
              <div style={{ padding: "2rem" }}>
+                <h3 style={{ marginBottom: "1rem" }}>Pet Sitting & Walking</h3>
                 <button className="btn btn-primary" style={{ width: "100%" }}>Book Pet Care</button>
              </div>
           </div>
 
-          <div className="glass-card" style={{ padding: "0", overflow: "hidden", borderTop: "4px solid var(--color-olive)" }}>
-             <img src="/images/house-sitting-flyer.jpg" alt="House Sitting Services" style={{ width: "100%", display: "block" }} />
+          <div className="glass-card" style={{ padding: "0", overflow: "hidden" }}>
+             <img src="/images/finch_house_sitting.svg" alt="House Sitting Services" style={{ width: "100%", height: "auto", display: "block" }} />
              <div style={{ padding: "2rem" }}>
+                <h3 style={{ marginBottom: "1rem" }}>House Management</h3>
                 <button className="btn btn-outline" style={{ width: "100%" }}>Book House Management</button>
+             </div>
+          </div>
+
+          <div className="glass-card" style={{ padding: "0", overflow: "hidden", borderTop: "4px solid var(--color-olive)" }}>
+             <img src="/images/finch_overnight.svg" alt="Overnight Pet Sitting" style={{ width: "100%", height: "auto", display: "block" }} />
+             <div style={{ padding: "2rem" }}>
+                <h3 style={{ marginBottom: "1rem" }}>Overnight Sitting</h3>
+                <button className="btn btn-primary" style={{ width: "100%" }}>Book Overnight</button>
              </div>
           </div>
         </div>
