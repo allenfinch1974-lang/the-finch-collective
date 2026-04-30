@@ -98,7 +98,7 @@ export default function CalendarDashboard({ initialSettings, initialAppointments
                     <h4 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--color-charcoal)' }}>{app.title}</h4>
                     <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem', borderRadius: '12px', backgroundColor: `${hex}20`, color: hex, fontWeight: 'bold' }}>{name}</span>
                   </div>
-                  <div style={{ fontSize: '0.875rem', color: 'var(--color-taupe)', marginBottom: '0.5rem' }}>
+                  <div suppressHydrationWarning style={{ fontSize: '0.875rem', color: 'var(--color-taupe)', marginBottom: '0.5rem' }}>
                     {new Date(app.start_time).toLocaleString()} - {new Date(app.end_time).toLocaleString()}
                   </div>
                   {app.clients && (

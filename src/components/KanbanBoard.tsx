@@ -79,7 +79,7 @@ export default function KanbanBoard({ initialLeads }: { initialLeads: any[] }) {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                   <strong style={{ fontSize: '1rem', color: 'var(--color-olive-dark)' }}>{lead.first_name} {lead.last_name}</strong>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--color-taupe)' }}>{new Date(lead.created_at).toLocaleDateString()}</span>
+                  <span suppressHydrationWarning style={{ fontSize: '0.75rem', color: 'var(--color-taupe)' }}>{new Date(lead.created_at).toLocaleDateString()}</span>
                 </div>
                 <div style={{ fontSize: '0.875rem', color: 'var(--color-sage)', marginBottom: '0.5rem' }}>
                   {lead.service_package}

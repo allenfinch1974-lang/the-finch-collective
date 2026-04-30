@@ -68,7 +68,7 @@ export default function InteractionTimeline({ clientId, initialLogs }: { clientI
             <div style={{ backgroundColor: 'var(--color-white)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--color-oatmeal-dark)', flex: 1, boxShadow: 'var(--shadow-sm)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                 <strong style={{ fontSize: '0.875rem' }}>{log.interaction_type} by {log.performed_by || 'System'}</strong>
-                <span style={{ fontSize: '0.75rem', color: 'var(--color-taupe)' }}>
+                <span suppressHydrationWarning style={{ fontSize: '0.75rem', color: 'var(--color-taupe)' }}>
                   {new Date(log.created_at).toLocaleString()}
                 </span>
               </div>

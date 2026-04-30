@@ -121,7 +121,7 @@ export default function DocumentManager({ clientId, initialDocuments }: { client
                     {doc.status}
                   </span>
                 </td>
-                <td style={{ padding: '0.75rem' }}>{new Date(doc.created_at).toLocaleDateString()}</td>
+                <td suppressHydrationWarning style={{ padding: '0.75rem' }}>{new Date(doc.created_at).toLocaleDateString()}</td>
                 <td style={{ padding: '0.75rem' }}>
                   <button onClick={() => copyToClipboard(doc.token_url)} style={{ background: 'none', border: '1px solid var(--color-olive)', borderRadius: '4px', padding: '0.2rem 0.5rem', color: 'var(--color-olive)', cursor: 'pointer', fontSize: '0.75rem' }}>
                     Copy Link
